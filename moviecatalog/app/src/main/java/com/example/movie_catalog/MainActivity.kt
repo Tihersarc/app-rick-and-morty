@@ -22,13 +22,17 @@ class MainActivity : ComponentActivity() {
         // Ejemplo de manejo de errores
         lifecycleScope.launch {
             try {
-                val topRatedMovies = MovieApi.retrofitService.getTopRatedMovies(API_KEY)
+                val response = MovieApi.retrofitService.getTopRatedMovies(API_KEY)
+                val moviesArray = response.getAsJsonArray("results")
+
+                // Now you can convert the moviesArray to a list of Movie objects
+                val topRatedMovies = moviesArray.map { MovieApi.gson.fromJson(it, Movie::class.java) }
+
                 Log.d("MainActivity", "Fetching top-rated movies...")
             } catch (e: Exception) {
-                // Manejo de errores: Muestra un mensaje de error en la interfaz de usuario
+                // Handle errors
                 e.printStackTrace()
                 Log.e("MainActivity", "Error fetching top-rated movies", e)
-
             }
         }
     }
