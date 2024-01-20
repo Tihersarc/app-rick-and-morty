@@ -13,17 +13,19 @@ import retrofit2.Response
 class MainActivity : ComponentActivity() {
     private lateinit var recyclerAdapter: RecyclerAdapter
     private var currentPage = 1
+    private var isFetching = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         Picasso.setSingletonInstance(Picasso.Builder(this)
             .loggingEnabled(true)
             .build())
 
         recyclerAdapter = RecyclerAdapter()
         val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
-        recyclerView.layoutManager = GridLayoutManager(this, 2) // Two columns, adjust as needed
+        recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = recyclerAdapter
 
         // Initial load of the first page
@@ -38,49 +40,42 @@ class MainActivity : ComponentActivity() {
                 val totalItemCount = layoutManager.itemCount
                 val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
-                if (visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0) {
-                    // Check if there are more pages to load
-                    if (currentPage <= movieResponse?.totalPages ?: 0) {
-                        // Reached the end of the list, load the next page
-                        loadMovies()
-                    }
+                if (!isFetching && visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0) {
+                    // Reached the end of the list, load the next page
+                    loadMovies()
                 }
             }
         })
-
     }
 
-    // Inside MainActivity
-//    private fun loadMovies() {
-//        lifecycleScope.launch {
-//            try {
-//                val response: Response<MovieResponse> = MovieApi.retrofitService.getTopRatedMovies(API_KEY, currentPage)
-//
-//                if (response.isSuccessful) {
-//                    val movieResponse = response.body()
-//                    val movies = movieResponse?.results
-//
-//                    if (movies != null) {
-//                        recyclerAdapter.addMovies(movies)
-//                        currentPage = currentPage.takeIf { it < movieResponse.totalPages }?.plus(1) ?: currentPage
-//                    } else {
-//                        Log.e("MainActivity", "No movies found in the response body")
-//                    }
-//                } else {
-//                    Log.e("MainActivity", "Failed to fetch movies: ${response.code()}")
-//                }
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//                Log.e("MainActivity", "Error fetching top-rated movies", e)
-//            }
-//        }
-//    }
     private fun loadMovies() {
-        val movieResponse = viewModel.getMovieResponse()
-        if (currentPage <= movieResponse?.totalPages ?: 0) {
-            // Reached the end of the list, load the next page
-            viewModel.loadNextPage()
+        if (isFetching) return
+
+        isFetching = true
+
+        lifecycleScope.launch {
+            try {
+                val response: Response<MovieResponse> = MovieApi.retrofitService.getTopRatedMovies(API_KEY, currentPage)
+
+                if (response.isSuccessful) {
+                    val movieResponse = response.body()
+                    val movies = movieResponse?.results
+
+                    if (movies != null) {
+                        recyclerAdapter.addMovies(movies)
+                        currentPage++
+                    } else {
+                        Log.e("MainActivity", "No movies found in the response body")
+                    }
+                } else {
+                    Log.e("MainActivity", "Failed to fetch movies: ${response.code()}")
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e("MainActivity", "Error fetching top-rated movies", e)
+            } finally {
+                isFetching = false
+            }
         }
     }
-
 }
