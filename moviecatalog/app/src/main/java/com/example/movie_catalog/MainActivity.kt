@@ -3,36 +3,78 @@ package com.example.movie_catalog
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
-import com.example.movie_catalog.ui.theme.MoviecatalogTheme
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
+import retrofit2.Response
 
 class MainActivity : ComponentActivity() {
+    private lateinit var recyclerAdapter: RecyclerAdapter
+    private var currentPage = 1
+    private var isFetching = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-        // Ejemplo de manejo de errores
+        Picasso.setSingletonInstance(Picasso.Builder(this)
+            .loggingEnabled(true)
+            .build())
+
+        recyclerAdapter = RecyclerAdapter()
+        val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
+        recyclerView.layoutManager = GridLayoutManager(this, 2)
+        recyclerView.adapter = recyclerAdapter
+
+        // Initial load of the first page
+        loadMovies()
+
+        // Example: Load the next page when needed (e.g., when reaching the end of the list)
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val layoutManager = recyclerView.layoutManager as GridLayoutManager
+                val visibleItemCount = layoutManager.childCount
+                val totalItemCount = layoutManager.itemCount
+                val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+
+                if (!isFetching && visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0) {
+                    // Reached the end of the list, load the next page
+                    loadMovies()
+                }
+            }
+        })
+    }
+
+    private fun loadMovies() {
+        if (isFetching) return
+
+        isFetching = true
+
         lifecycleScope.launch {
             try {
-                val response = MovieApi.retrofitService.getTopRatedMovies(API_KEY)
-                val moviesArray = response.getAsJsonArray("results")
+                val response: Response<MovieResponse> = MovieApi.retrofitService.getTopRatedMovies(API_KEY, currentPage)
 
-                // Now you can convert the moviesArray to a list of Movie objects
-                val topRatedMovies = moviesArray.map { MovieApi.gson.fromJson(it, Movie::class.java) }
+                if (response.isSuccessful) {
+                    val movieResponse = response.body()
+                    val movies = movieResponse?.results
 
-                Log.d("MainActivity", "Fetching top-rated movies...")
+                    if (movies != null) {
+                        recyclerAdapter.addMovies(movies)
+                        currentPage++
+                    } else {
+                        Log.e("MainActivity", "No movies found in the response body")
+                    }
+                } else {
+                    Log.e("MainActivity", "Failed to fetch movies: ${response.code()}")
+                }
             } catch (e: Exception) {
-                // Handle errors
                 e.printStackTrace()
                 Log.e("MainActivity", "Error fetching top-rated movies", e)
+            } finally {
+                isFetching = false
             }
         }
     }
