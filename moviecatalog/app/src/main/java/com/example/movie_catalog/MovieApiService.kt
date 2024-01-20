@@ -1,9 +1,8 @@
 package com.example.movie_catalog
 
 import com.google.gson.Gson
-import com.google.gson.JsonObject
 import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -23,11 +22,11 @@ interface MovieApiService {
     @GET("movie/top_rated")
     suspend fun getTopRatedMovies(
         @Query("api_key") apiKey: String,
-        @Query("page") page: Int = 1
-    ): MovieResponse
+        @Query("page") page: Int
+    ): Response<MovieResponse>
 }
 
-@Serializable
+//@Serializable
 data class MovieResponse(
     val results: List<Movie>,
     val page: Int,

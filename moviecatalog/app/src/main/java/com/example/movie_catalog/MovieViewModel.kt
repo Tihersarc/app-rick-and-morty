@@ -1,47 +1,77 @@
+package com.example.movie_catalog
+
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.movie_catalog.API_KEY
-import com.example.movie_catalog.Movie
-import com.example.movie_catalog.MovieApi
-import com.google.gson.JsonObject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
-import java.io.IOException
+import retrofit2.Response
 
 sealed interface MovieUiState {
     data class Success(val movies: List<Movie>) : MovieUiState
-    object Error : MovieUiState
+    data class Error(val message: String) : MovieUiState
     object Loading : MovieUiState
 }
 
-class MovieViewModel : ViewModel() {
-    var movieUiState: MovieUiState by mutableStateOf(MovieUiState.Loading)
-        private set
+class MovieViewModel(private val apiService: MovieApiService) : ViewModel() {
+
+    private val _movieUiState = MutableStateFlow<MovieUiState>(MovieUiState.Loading)
+    val movieUiState: StateFlow<MovieUiState> get() = _movieUiState
+
+    private var currentPage = 1
+    private var isFetching = false
+    private var movieResponse: MovieResponse? = null
 
     init {
-        getTopRatedMovies()
+        fetchMovies()
     }
 
-    fun getTopRatedMovies() {
+    private fun fetchMovies(page: Int) {
         viewModelScope.launch {
-            movieUiState = MovieUiState.Loading
-
-            val listResult = MovieApi.retrofitService.getTopRatedMovies(API_KEY)
-
             try {
-                val response = MovieApi.retrofitService.getTopRatedMovies(API_KEY)
-                val topRatedMovies = response.results
+                _movieUiState.value = MovieUiState.Loading
 
-                movieUiState = MovieUiState.Success(topRatedMovies)
-            } catch (e: IOException) {
-                movieUiState = MovieUiState.Error
-            } catch (e: HttpException) {
-                movieUiState = MovieUiState.Error
+                val response: Response<MovieResponse> = apiService.getTopRatedMovies(API_KEY, page)
+
+                if (response.isSuccessful) {
+                    movieResponse = response.body()
+                    val movies = movieResponse?.results
+
+                    if (movies != null) {
+                        _movieUiState.value = MovieUiState.Success(movies)
+                        isFetching = false
+                    } else {
+                        _movieUiState.value = MovieUiState.Error("No movies found")
+                    }
+                } else {
+                    _movieUiState.value = MovieUiState.Error("Failed to fetch movies: ${response.code()}")
+                }
+            } catch (e: Exception) {
+                _movieUiState.value = MovieUiState.Error("An error occurred: ${e.message}")
             }
         }
     }
+
+    // Initial function to load the first page
+    private fun fetchMovies() {
+        if (!isFetching) {
+            isFetching = true
+            fetchMovies(currentPage)
+        }
+    }
+
+    // Function to load the next page
+    fun loadNextPage() {
+        currentPage++
+        fetchMovies(currentPage)
+    }
+
+    // Getter method for movieResponse
+    fun getMovieResponse(): MovieResponse? {
+        return movieResponse
+    }
 }
+
+
+

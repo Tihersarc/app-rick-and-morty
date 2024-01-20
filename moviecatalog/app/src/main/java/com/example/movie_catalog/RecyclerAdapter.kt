@@ -10,15 +10,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
-class RecyclerAdapter(private var mMovies : List<Movie>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+class RecyclerAdapter(private var mMovies: MutableList<Movie> = mutableListOf()) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val movieImage : ImageView = itemView.findViewById<ImageView>(R.id.movieImage)
-        val movieTitle : TextView = itemView.findViewById<TextView>(R.id.movieTitle)
+        val movieImage: ImageView = itemView.findViewById<ImageView>(R.id.movieImage)
+        val movieTitle: TextView = itemView.findViewById<TextView>(R.id.movieTitle)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val context = parent?.context
+        val context = parent.context
         val inflater = LayoutInflater.from(context)
         val contactView = inflater.inflate(R.layout.movie_container, parent, false)
 
@@ -42,7 +42,6 @@ class RecyclerAdapter(private var mMovies : List<Movie>) : RecyclerView.Adapter<
             .into(holder.movieImage, object : Callback {
                 override fun onSuccess() {
                     Log.d("Picasso", "Image loaded successfully for movie: ${movie.title}")
-
                 }
 
                 override fun onError(e: Exception?) {
@@ -54,8 +53,16 @@ class RecyclerAdapter(private var mMovies : List<Movie>) : RecyclerView.Adapter<
         holder.movieTitle.text = movie.title
     }
 
+    // Method to set the entire list of movies
     fun setMovies(movies: List<Movie>) {
-        mMovies = movies
+        mMovies.clear()
+        mMovies.addAll(movies)
+        notifyDataSetChanged()
+    }
+
+    // Method to add new movies to the existing list
+    fun addMovies(newMovies: List<Movie>) {
+        mMovies.addAll(newMovies)
         notifyDataSetChanged()
     }
 }

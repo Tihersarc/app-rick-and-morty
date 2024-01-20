@@ -8,9 +8,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
+import retrofit2.Response
 
 class MainActivity : ComponentActivity() {
     private lateinit var recyclerAdapter: RecyclerAdapter
+    private var currentPage = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,23 +21,66 @@ class MainActivity : ComponentActivity() {
             .loggingEnabled(true)
             .build())
 
-
-        recyclerAdapter = RecyclerAdapter(emptyList())
+        recyclerAdapter = RecyclerAdapter()
         val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
-        recyclerView.layoutManager = GridLayoutManager(this, 2) // Dos columnas, ajusta según desees
+        recyclerView.layoutManager = GridLayoutManager(this, 2) // Two columns, adjust as needed
         recyclerView.adapter = recyclerAdapter
 
+        // Initial load of the first page
+        loadMovies()
 
-        lifecycleScope.launch {
-            try {
-                val response = MovieApi.retrofitService.getTopRatedMovies(API_KEY)
+        // Example: Load the next page when needed (e.g., when reaching the end of the list)
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val layoutManager = recyclerView.layoutManager as GridLayoutManager
+                val visibleItemCount = layoutManager.childCount
+                val totalItemCount = layoutManager.itemCount
+                val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
-                val movies = response.results
-                recyclerAdapter.setMovies(movies)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Log.e("MainActivity", "Error fetching top-rated movies", e)
+                if (visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0) {
+                    // Check if there are more pages to load
+                    if (currentPage <= movieResponse?.totalPages ?: 0) {
+                        // Reached the end of the list, load the next page
+                        loadMovies()
+                    }
+                }
             }
+        })
+
+    }
+
+    // Inside MainActivity
+//    private fun loadMovies() {
+//        lifecycleScope.launch {
+//            try {
+//                val response: Response<MovieResponse> = MovieApi.retrofitService.getTopRatedMovies(API_KEY, currentPage)
+//
+//                if (response.isSuccessful) {
+//                    val movieResponse = response.body()
+//                    val movies = movieResponse?.results
+//
+//                    if (movies != null) {
+//                        recyclerAdapter.addMovies(movies)
+//                        currentPage = currentPage.takeIf { it < movieResponse.totalPages }?.plus(1) ?: currentPage
+//                    } else {
+//                        Log.e("MainActivity", "No movies found in the response body")
+//                    }
+//                } else {
+//                    Log.e("MainActivity", "Failed to fetch movies: ${response.code()}")
+//                }
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//                Log.e("MainActivity", "Error fetching top-rated movies", e)
+//            }
+//        }
+//    }
+    private fun loadMovies() {
+        val movieResponse = viewModel.getMovieResponse()
+        if (currentPage <= movieResponse?.totalPages ?: 0) {
+            // Reached the end of the list, load the next page
+            viewModel.loadNextPage()
         }
     }
+
 }

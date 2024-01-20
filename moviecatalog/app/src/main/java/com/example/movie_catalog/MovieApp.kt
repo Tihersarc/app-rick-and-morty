@@ -2,7 +2,6 @@ package com.example.movie_catalog
 
 
 
-import MovieViewModel
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -19,38 +18,36 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MovieApp() {
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = { MovieTopAppBar(scrollBehavior = scrollBehavior) }
-    ) {
-        Surface(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(it)
-        ) {
-            val movieViewModel: MovieViewModel = viewModel()
-            HomeScreen(movieUiState = movieViewModel.movieUiState)
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MovieTopAppBar(scrollBehavior: TopAppBarScrollBehavior, modifier: Modifier = Modifier) {
-    CenterAlignedTopAppBar(
-        scrollBehavior = scrollBehavior,
-        title = {
-            Text(
-                text = stringResource(R.string.app_name),
-                style = MaterialTheme.typography.headlineSmall,
-            )
-        },
-        modifier = modifier
-    )
-}
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//fun MovieApp() {
+//    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+//    Scaffold(
+//        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+//        topBar = { MovieTopAppBar(scrollBehavior = scrollBehavior) }
+//    ) {
+//        Surface(
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .padding(it)
+//        ) {
+//            val movieViewModel: MovieViewModel = viewModel()
+//            HomeScreen(movieUiState = movieViewModel.movieUiState)
+//        }
+//    }
+//}
+//
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//fun MovieTopAppBar(scrollBehavior: TopAppBarScrollBehavior, modifier: Modifier = Modifier) {
+//    CenterAlignedTopAppBar(
+//        scrollBehavior = scrollBehavior,
+//        title = {
+//            Text(
+//                text = stringResource(R.string.app_name),
+//                style = MaterialTheme.typography.headlineSmall,
+//            )
+//        },
+//        modifier = modifier
+//    )
+//}
