@@ -1,5 +1,6 @@
 package com.example.movie_catalog
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -11,6 +12,7 @@ import kotlinx.coroutines.launch
 import retrofit2.Response
 
 class MainActivity : ComponentActivity() {
+
     private lateinit var recyclerAdapter: RecyclerAdapter
     private var currentPage = 1
     private var isFetching = false
@@ -44,6 +46,18 @@ class MainActivity : ComponentActivity() {
                     // Reached the end of the list, load the next page
                     loadMovies()
                 }
+            }
+        })
+
+        // Handle item click to open MovieInfoActivity
+        recyclerAdapter.setOnItemClickListener(object : OnItemClickListener {
+            override fun onItemClick(movie: Movie) {
+                val intent = Intent(this@MainActivity, MovieInfoActivity::class.java).apply {
+                    putExtra("movieTitle", movie.title)
+                    putExtra("movieDescription", movie.overview)
+                    putExtra("movieImagePath", movie.image)
+                }
+                startActivity(intent)
             }
         })
     }

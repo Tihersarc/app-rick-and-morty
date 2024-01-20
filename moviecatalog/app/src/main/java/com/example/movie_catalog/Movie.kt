@@ -8,5 +8,8 @@ import kotlinx.serialization.Serializable
 data class Movie(
     @SerializedName(value = "poster_path")
     val image : String?,
-    val title : String
+    val title : String,
+    @SerializedName(value = "release_date")
+    val releaseDate : String,
+    val overview : String
 )
