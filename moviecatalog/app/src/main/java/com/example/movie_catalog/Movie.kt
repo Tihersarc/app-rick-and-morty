@@ -1,11 +1,12 @@
 package com.example.movie_catalog
 
+import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Movie(
-    @SerialName(value = "poster_path")
-    var image : String,
-    var title : String
+    @SerializedName(value = "poster_path")
+    val image : String?,
+    val title : String
 )
