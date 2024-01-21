@@ -53,7 +53,6 @@ class MovieViewModel(private val apiService: MovieApiService) : ViewModel() {
         }
     }
 
-    // Initial function to load the first page
     private fun fetchMovies() {
         if (!isFetching) {
             isFetching = true
@@ -61,13 +60,11 @@ class MovieViewModel(private val apiService: MovieApiService) : ViewModel() {
         }
     }
 
-    // Function to load the next page
     fun loadNextPage() {
         currentPage++
         fetchMovies(currentPage)
     }
 
-    // Getter method for movieResponse
     fun getMovieResponse(): MovieResponse? {
         return movieResponse
     }

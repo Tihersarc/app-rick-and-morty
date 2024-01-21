@@ -24,7 +24,11 @@ class MovieInfoActivity : AppCompatActivity() {
         titleTextView.text = movieTitle
         descriptionTextView.text = movieDescription
 
-        Picasso.get().load(movieImagePath).into(imageView)
+        Picasso.get()
+            .load("https://image.tmdb.org/t/p/w500/$movieImagePath")
+            .placeholder(R.drawable.ic_placeholder)
+            .error(R.drawable.ic_error)
+            .into(imageView)
 
         backButton.setOnClickListener {
             finish()

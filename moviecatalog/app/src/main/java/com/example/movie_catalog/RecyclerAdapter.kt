@@ -28,7 +28,6 @@ class RecyclerAdapter(private var mMovies: MutableList<Movie> = mutableListOf())
         val movieTitle: TextView = itemView.findViewById<TextView>(R.id.movieTitle)
 
         init {
-            // Set click listener for the entire item view
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION && onItemClickListener != null) {
@@ -55,9 +54,8 @@ class RecyclerAdapter(private var mMovies: MutableList<Movie> = mutableListOf())
 
         val imageUrl = movie.image
 
-        // Use Picasso to load the movie image into the ImageView
         Picasso.get()
-            .load("https://image.tmdb.org/t/p/w500/$imageUrl")  // Full image URL construction
+            .load("https://image.tmdb.org/t/p/w500/$imageUrl")
             .placeholder(R.drawable.ic_placeholder)
             .error(R.drawable.ic_error)
             .into(holder.movieImage, object : Callback {
@@ -74,14 +72,12 @@ class RecyclerAdapter(private var mMovies: MutableList<Movie> = mutableListOf())
         holder.movieTitle.text = movie.title
     }
 
-    // Method to set the entire list of movies
     fun setMovies(movies: List<Movie>) {
         mMovies.clear()
         mMovies.addAll(movies)
         notifyDataSetChanged()
     }
 
-    // Method to add new movies to the existing list
     fun addMovies(newMovies: List<Movie>) {
         mMovies.addAll(newMovies)
         notifyDataSetChanged()

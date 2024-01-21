@@ -30,10 +30,8 @@ class MainActivity : ComponentActivity() {
         recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = recyclerAdapter
 
-        // Initial load of the first page
         loadMovies()
 
-        // Example: Load the next page when needed (e.g., when reaching the end of the list)
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -43,7 +41,6 @@ class MainActivity : ComponentActivity() {
                 val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
                 if (!isFetching && visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0) {
-                    // Reached the end of the list, load the next page
                     loadMovies()
                 }
             }
