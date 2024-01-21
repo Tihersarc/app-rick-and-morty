@@ -1,5 +1,6 @@
 package com.example.movie_catalog
 
+import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -22,10 +23,9 @@ class RecyclerAdapter(private var mMovies: MutableList<Movie> = mutableListOf())
         this.onItemClickListener = listener
     }
 
-
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val movieImage: ImageView = itemView.findViewById<ImageView>(R.id.movieImage)
-        val movieTitle: TextView = itemView.findViewById<TextView>(R.id.movieTitle)
+        val movieImage: ImageView = itemView.findViewById(R.id.movieImage)
+        val movieTitle: TextView = itemView.findViewById(R.id.movieTitle)
 
         init {
             itemView.setOnClickListener {
@@ -72,12 +72,7 @@ class RecyclerAdapter(private var mMovies: MutableList<Movie> = mutableListOf())
         holder.movieTitle.text = movie.title
     }
 
-    fun setMovies(movies: List<Movie>) {
-        mMovies.clear()
-        mMovies.addAll(movies)
-        notifyDataSetChanged()
-    }
-
+    @SuppressLint("NotifyDataSetChanged")
     fun addMovies(newMovies: List<Movie>) {
         mMovies.addAll(newMovies)
         notifyDataSetChanged()

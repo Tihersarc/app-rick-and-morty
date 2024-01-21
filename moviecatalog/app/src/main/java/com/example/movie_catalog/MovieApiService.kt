@@ -36,7 +36,4 @@ object MovieApi {
     val retrofitService: MovieApiService by lazy {
         retrofit.create(MovieApiService::class.java)
     }
-
-    val gson: Gson
-        get() = gsonInstance
 }

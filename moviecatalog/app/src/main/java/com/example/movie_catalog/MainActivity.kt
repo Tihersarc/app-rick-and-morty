@@ -46,7 +46,6 @@ class MainActivity : ComponentActivity() {
             }
         })
 
-        // Handle item click to open MovieInfoActivity
         recyclerAdapter.setOnItemClickListener(object : OnItemClickListener {
             override fun onItemClick(movie: Movie) {
                 val intent = Intent(this@MainActivity, MovieInfoActivity::class.java).apply {
