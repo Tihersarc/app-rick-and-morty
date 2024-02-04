@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.squareup.picasso.Picasso
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,9 +19,13 @@ class MainActivity : AppCompatActivity() {
             openCharacterActivity()
         }
 
+        Picasso.setSingletonInstance(
+            Picasso.Builder(this)
+                .loggingEnabled(true)
+                .build())
     }
 
-    fun openCharacterActivity() {
+    private fun openCharacterActivity() {
         val intent = Intent(this, CharacterActivity::class.java)
         startActivity(intent)
     }

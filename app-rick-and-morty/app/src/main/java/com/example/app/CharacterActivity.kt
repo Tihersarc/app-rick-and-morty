@@ -22,10 +22,7 @@ class CharacterActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_character)
 
-        Picasso.setSingletonInstance(
-            Picasso.Builder(this)
-            .loggingEnabled(true)
-            .build())
+
 
         recyclerAdapter = RecyclerAdapter()
         val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
