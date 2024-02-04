@@ -1,4 +1,4 @@
-package com.example.movie_catalog
+package com.example.app
 
 import android.content.Intent
 import android.os.Bundle
@@ -47,11 +47,10 @@ class MainActivity : ComponentActivity() {
         })
 
         recyclerAdapter.setOnItemClickListener(object : OnItemClickListener {
-            override fun onItemClick(movie: Movie) {
+            override fun onItemClick(character: Character) {
                 val intent = Intent(this@MainActivity, MovieInfoActivity::class.java).apply {
-                    putExtra("movieTitle", movie.title)
-                    putExtra("movieDescription", movie.overview)
-                    putExtra("movieImagePath", movie.image)
+                    putExtra("name", character.name)
+                    putExtra("image", character.image)
                 }
                 startActivity(intent)
             }
@@ -65,7 +64,7 @@ class MainActivity : ComponentActivity() {
 
         lifecycleScope.launch {
             try {
-                val response: Response<MovieResponse> = MovieApi.retrofitService.getTopRatedMovies(API_KEY, currentPage)
+                val response: Response<MovieResponse> = MovieApi.retrofitService.getTopRatedMovies(currentPage)
 
                 if (response.isSuccessful) {
                     val movieResponse = response.body()

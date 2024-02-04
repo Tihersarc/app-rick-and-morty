@@ -1,4 +1,4 @@
-package com.example.movie_catalog
+package com.example.app
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -12,10 +12,10 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
 interface OnItemClickListener {
-    fun onItemClick(movie: Movie)
+    fun onItemClick(character: Character)
 }
 
-class RecyclerAdapter(private var mMovies: MutableList<Movie> = mutableListOf()) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+class RecyclerAdapter(private var mCharacters: MutableList<Character> = mutableListOf()) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
     private var onItemClickListener: OnItemClickListener? = null
 
@@ -31,7 +31,7 @@ class RecyclerAdapter(private var mMovies: MutableList<Movie> = mutableListOf())
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION && onItemClickListener != null) {
-                    onItemClickListener!!.onItemClick(mMovies[position])
+                    onItemClickListener!!.onItemClick(mCharacters[position])
                 }
             }
         }
@@ -46,35 +46,35 @@ class RecyclerAdapter(private var mMovies: MutableList<Movie> = mutableListOf())
     }
 
     override fun getItemCount(): Int {
-        return mMovies.size
+        return mCharacters.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val movie: Movie = mMovies[position]
+        val character: Character = mCharacters[position]
 
-        val imageUrl = movie.image
+        val imageUrl = character.image
 
         Picasso.get()
-            .load("https://image.tmdb.org/t/p/w500/$imageUrl")
+            .load("$imageUrl")
             .placeholder(R.drawable.ic_placeholder)
             .error(R.drawable.ic_error)
             .into(holder.movieImage, object : Callback {
                 override fun onSuccess() {
-                    Log.d("Picasso", "Image loaded successfully for movie: ${movie.title}")
+                    Log.d("Picasso", "Image loaded successfully for item: ${character.name}")
                 }
 
                 override fun onError(e: Exception?) {
                     e?.printStackTrace()
-                    Log.e("Picasso", "Error loading image for movie: ${movie.title}", e)
+                    Log.e("Picasso", "Error loading image for item: ${character.name}", e)
                 }
             })
 
-        holder.movieTitle.text = movie.title
+        holder.movieTitle.text = character.name
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun addMovies(newMovies: List<Movie>) {
-        mMovies.addAll(newMovies)
+    fun addMovies(newCharacters: List<Character>) {
+        mCharacters.addAll(newCharacters)
         notifyDataSetChanged()
     }
 }

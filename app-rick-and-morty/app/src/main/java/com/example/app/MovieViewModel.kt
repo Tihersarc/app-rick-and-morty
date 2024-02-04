@@ -1,4 +1,4 @@
-package com.example.movie_catalog
+package com.example.app
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,7 +18,7 @@ class MovieViewModel(private val apiService: MovieApiService) : ViewModel() {
     private fun fetchMovies(page: Int) {
         viewModelScope.launch {
 
-            val response: Response<MovieResponse> = apiService.getTopRatedMovies(API_KEY, page)
+            val response: Response<MovieResponse> = apiService.getTopRatedMovies(page)
 
             if (response.isSuccessful) {
                 movieResponse = response.body()

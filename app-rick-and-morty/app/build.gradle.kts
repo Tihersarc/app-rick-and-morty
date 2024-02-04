@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.movie_catalog"
+    namespace = "com.example.app"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.movie_catalog"
+        applicationId = "com.example.app"
         minSdk = 33
         //noinspection OldTargetApi
         targetSdk = 33
