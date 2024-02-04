@@ -51,6 +51,9 @@ class MainActivity : ComponentActivity() {
                 val intent = Intent(this@MainActivity, CharacterInfoActivity::class.java).apply {
                     putExtra("name", character.name)
                     putExtra("image", character.image)
+                    putExtra("status", character.status)
+                    putExtra("gender", character.gender)
+                    putExtra("originName", character.origin.name)
                 }
                 startActivity(intent)
             }

@@ -1,6 +1,12 @@
 package com.example.app
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
+import android.graphics.BitmapShader
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.RectF
+import android.graphics.Shader
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +16,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import com.squareup.picasso.Transformation
 
 interface OnItemClickListener {
     fun onItemClick(character: Character)
@@ -55,7 +62,8 @@ class RecyclerAdapter(private var mCharacters: MutableList<Character> = mutableL
         val imageUrl = character.image
 
         Picasso.get()
-            .load("$imageUrl")
+            .load(imageUrl)
+            .transform(RoundCornersTransformation(30f))
             .placeholder(R.drawable.ic_placeholder)
             .error(R.drawable.ic_error)
             .into(holder.movieImage, object : Callback {
@@ -76,5 +84,32 @@ class RecyclerAdapter(private var mCharacters: MutableList<Character> = mutableL
     fun addMovies(newCharacters: List<Character>) {
         mCharacters.addAll(newCharacters)
         notifyDataSetChanged()
+    }
+}
+
+class RoundCornersTransformation(private val radius: Float) : Transformation {
+
+    override fun key(): String {
+        return "rounded(radius=$radius)"
+    }
+
+    override fun transform(source: Bitmap): Bitmap {
+        val width = source.width
+        val height = source.height
+
+        val output = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(output)
+
+        val paint = Paint()
+        paint.isAntiAlias = true
+        paint.shader = BitmapShader(source, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
+        val rect = RectF(0f, 0f, width.toFloat(), height.toFloat())
+        canvas.drawRoundRect(rect, radius, radius, paint)
+
+        if (source != output) {
+            source.recycle()
+        }
+
+        return output
     }
 }
