@@ -7,25 +7,25 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
 
-class MovieInfoActivity : AppCompatActivity() {
+class CharacterInfoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_movie_info)
+        setContentView(R.layout.activity_character_info)
 
-        val movieTitle = intent.getStringExtra("movieTitle")
+        val characterName = intent.getStringExtra("characterName")
         val movieDescription = intent.getStringExtra("movieDescription")
-        val movieImagePath = intent.getStringExtra("movieImagePath")
+        val characterImagePath = intent.getStringExtra("characterImagePath")
 
-        val imageView: ImageView = findViewById(R.id.movieInfoImage)
-        val titleTextView: TextView = findViewById(R.id.movieInfoTitle)
-        val descriptionTextView: TextView = findViewById(R.id.movieInfoDescription)
+        val imageView: ImageView = findViewById(R.id.characterInfoImage)
+        val nameTextView: TextView = findViewById(R.id.characterInfoName)
+        val descriptionTextView: TextView = findViewById(R.id.characterInfoDescription)
         val backButton: Button = findViewById(R.id.backButton)
 
-        titleTextView.text = movieTitle
-        descriptionTextView.text = movieDescription
+        nameTextView.text = characterName
+        descriptionTextView.text = "$movieDescription"
 
         Picasso.get()
-            .load("https://image.tmdb.org/t/p/w500/$movieImagePath")
+            .load("$characterImagePath")
             .placeholder(R.drawable.ic_placeholder)
             .error(R.drawable.ic_error)
             .into(imageView)

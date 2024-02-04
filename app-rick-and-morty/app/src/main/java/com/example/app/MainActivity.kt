@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
 
         recyclerAdapter.setOnItemClickListener(object : OnItemClickListener {
             override fun onItemClick(character: Character) {
-                val intent = Intent(this@MainActivity, MovieInfoActivity::class.java).apply {
+                val intent = Intent(this@MainActivity, CharacterInfoActivity::class.java).apply {
                     putExtra("name", character.name)
                     putExtra("image", character.image)
                 }

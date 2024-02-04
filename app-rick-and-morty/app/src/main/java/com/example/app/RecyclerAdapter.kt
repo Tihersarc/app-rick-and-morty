@@ -24,8 +24,8 @@ class RecyclerAdapter(private var mCharacters: MutableList<Character> = mutableL
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val movieImage: ImageView = itemView.findViewById(R.id.movieImage)
-        val movieTitle: TextView = itemView.findViewById(R.id.movieTitle)
+        val movieImage: ImageView = itemView.findViewById(R.id.characterImage)
+        val movieTitle: TextView = itemView.findViewById(R.id.characterName)
 
         init {
             itemView.setOnClickListener {
@@ -40,7 +40,7 @@ class RecyclerAdapter(private var mCharacters: MutableList<Character> = mutableL
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val context = parent.context
         val inflater = LayoutInflater.from(context)
-        val contactView = inflater.inflate(R.layout.movie_container, parent, false)
+        val contactView = inflater.inflate(R.layout.character_container, parent, false)
 
         return ViewHolder(contactView)
     }

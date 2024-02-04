@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class MovieViewModel(private val apiService: MovieApiService) : ViewModel() {
+class ViewModel(private val apiService: MovieApiService) : ViewModel() {
 
     private var currentPage = 1
     private var isFetching = false

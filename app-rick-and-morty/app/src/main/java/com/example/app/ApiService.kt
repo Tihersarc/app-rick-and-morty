@@ -1,6 +1,7 @@
 package com.example.app
 
 import com.google.gson.Gson
+import kotlinx.serialization.SerialName
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.http.GET
@@ -8,7 +9,6 @@ import retrofit2.http.Query
 import retrofit2.converter.gson.GsonConverterFactory
 
 private const val BASE_URL = "https://rickandmortyapi.com/api/"
-const val API_KEY = ""
 
 private val gsonInstance = Gson()
 
@@ -20,15 +20,15 @@ private val retrofit = Retrofit.Builder()
 interface MovieApiService {
     @GET("character")
     suspend fun getTopRatedMovies(
-        //@Query("api_key") apiKey: String,
         @Query("page") page: Int
     ): Response<MovieResponse>
 }
 
 data class MovieResponse(
     val results: List<Character>,
-//    val page: Int,
-//    @SerialName("total_pages") val totalPages: Int
+    val page: Int,
+    @SerialName("total_pages")
+    val totalPages: Int
 )
 
 object MovieApi {
