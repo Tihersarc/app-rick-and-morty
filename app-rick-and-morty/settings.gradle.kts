@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "movie-catalog"
+rootProject.name = "rick-and-morty-app"
 include(":app")
  

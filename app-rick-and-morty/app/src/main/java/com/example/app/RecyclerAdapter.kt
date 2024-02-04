@@ -31,8 +31,8 @@ class RecyclerAdapter(private var mCharacters: MutableList<Character> = mutableL
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val movieImage: ImageView = itemView.findViewById(R.id.characterImage)
-        val movieTitle: TextView = itemView.findViewById(R.id.characterName)
+        val characterImage: ImageView = itemView.findViewById(R.id.characterImage)
+        val characterName: TextView = itemView.findViewById(R.id.characterName)
 
         init {
             itemView.setOnClickListener {
@@ -66,7 +66,7 @@ class RecyclerAdapter(private var mCharacters: MutableList<Character> = mutableL
             .transform(RoundCornersTransformation(30f))
             .placeholder(R.drawable.ic_placeholder)
             .error(R.drawable.ic_error)
-            .into(holder.movieImage, object : Callback {
+            .into(holder.characterImage, object : Callback {
                 override fun onSuccess() {
                     Log.d("Picasso", "Image loaded successfully for item: ${character.name}")
                 }
@@ -77,11 +77,11 @@ class RecyclerAdapter(private var mCharacters: MutableList<Character> = mutableL
                 }
             })
 
-        holder.movieTitle.text = character.name
+        holder.characterName.text = character.name
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun addMovies(newCharacters: List<Character>) {
+    fun addCharacters(newCharacters: List<Character>) {
         mCharacters.addAll(newCharacters)
         notifyDataSetChanged()
     }

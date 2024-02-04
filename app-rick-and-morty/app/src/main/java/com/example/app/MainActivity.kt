@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
         recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = recyclerAdapter
 
-        loadMovies()
+        loadCharacters()
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
                 val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
                 if (!isFetching && visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0) {
-                    loadMovies()
+                    loadCharacters()
                 }
             }
         })
@@ -60,31 +60,31 @@ class MainActivity : ComponentActivity() {
         })
     }
 
-    private fun loadMovies() {
+    private fun loadCharacters() {
         if (isFetching) return
 
         isFetching = true
 
         lifecycleScope.launch {
             try {
-                val response: Response<MovieResponse> = MovieApi.retrofitService.getTopRatedMovies(currentPage)
+                val response: Response<ApiResponse> = CharacterApi.retrofitService.getCharacters(currentPage)
 
                 if (response.isSuccessful) {
-                    val movieResponse = response.body()
-                    val movies = movieResponse?.results
+                    val apiResponse = response.body()
+                    val characters = apiResponse?.results
 
-                    if (movies != null) {
-                        recyclerAdapter.addMovies(movies)
+                    if (characters != null) {
+                        recyclerAdapter.addCharacters(characters)
                         currentPage++
                     } else {
-                        Log.e("MainActivity", "No movies found in the response body")
+                        Log.e("MainActivity", "No characters found in the response body")
                     }
                 } else {
-                    Log.e("MainActivity", "Failed to fetch movies: ${response.code()}")
+                    Log.e("MainActivity", "Failed to fetch: ${response.code()}")
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                Log.e("MainActivity", "Error fetching top-rated movies", e)
+                Log.e("MainActivity", "Error fetching", e)
             } finally {
                 isFetching = false
             }
