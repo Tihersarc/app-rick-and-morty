@@ -15,8 +15,11 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
+            android:name=".CharacterActivity"
+            android:exported="false" />
+        <activity
             android:name=".CharacterInfoActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

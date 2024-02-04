@@ -6,12 +6,28 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="409dp"
-        android:layout_height="729dp"
+    <Button
+        android:id="@+id/characterListButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Browse Character List"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.499" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="370dp"
+        android:layout_height="125dp"
+        android:layout_marginTop="101dp"
+        android:layout_marginBottom="81dp"
+        android:src="@drawable/rick_and_morty"
+        app:layout_constraintBottom_toTopOf="@+id/characterListButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.487"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>
