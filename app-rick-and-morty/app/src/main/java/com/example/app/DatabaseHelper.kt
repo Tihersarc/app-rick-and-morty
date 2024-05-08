@@ -48,9 +48,17 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     fun getAllBookmarks(): Cursor {
         val db = readableDatabase
-        val projection = arrayOf(CharacterEntry.COLUMN_NAME_ID, CharacterEntry.COLUMN_NAME_NAME, CharacterEntry.COLUMN_NAME_IMAGE)
+        val projection = arrayOf(
+            CharacterEntry.COLUMN_NAME_ID,
+            CharacterEntry.COLUMN_NAME_NAME,
+            CharacterEntry.COLUMN_NAME_IMAGE,
+            CharacterEntry.COLUMN_NAME_GENDER, // Include gender column
+            CharacterEntry.COLUMN_NAME_ORIGIN,
+            CharacterEntry.COLUMN_NAME_STATUS
+        )
         return db.query(CharacterEntry.TABLE_NAME, projection, null, null, null, null, null)
     }
+
 
     companion object {
         const val DATABASE_VERSION = 1
