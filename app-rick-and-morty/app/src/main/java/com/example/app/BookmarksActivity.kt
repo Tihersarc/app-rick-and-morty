@@ -30,11 +30,11 @@ class BookmarksActivity : AppCompatActivity() {
         val cursor = dbHelper.getAllBookmarks()
         val bookmarks = mutableListOf<Character>()
         while (cursor.moveToNext()) {
-            val name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.CharacterInfo.CharacterEntry.COLUMN_NAME_NAME))
-            val image = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.CharacterInfo.CharacterEntry.COLUMN_NAME_IMAGE))
-            val gender = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.CharacterInfo.CharacterEntry.COLUMN_NAME_GENDER))
-            val origin = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.CharacterInfo.CharacterEntry.COLUMN_NAME_ORIGIN))
-            val status = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.CharacterInfo.CharacterEntry.COLUMN_NAME_STATUS))
+            val name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.CharacterEntry.COLUMN_NAME_NAME))
+            val image = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.CharacterEntry.COLUMN_NAME_IMAGE))
+            val gender = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.CharacterEntry.COLUMN_NAME_GENDER))
+            val origin = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.CharacterEntry.COLUMN_NAME_ORIGIN))
+            val status = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.CharacterEntry.COLUMN_NAME_STATUS))
             bookmarks.add(Character(name, image, gender, status, origin))
         }
         bookmarkAdapter.updateBookmarks(bookmarks)
