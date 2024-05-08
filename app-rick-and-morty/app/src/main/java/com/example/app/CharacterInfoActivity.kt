@@ -102,5 +102,6 @@ class CharacterInfoActivity : AppCompatActivity() {
             starButton.text = "Add Bookmark"
         }
     }
+
 }
 
