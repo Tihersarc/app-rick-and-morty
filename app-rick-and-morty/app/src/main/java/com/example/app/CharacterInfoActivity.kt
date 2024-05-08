@@ -10,8 +10,9 @@ import android.widget.Toast
 import com.squareup.picasso.Picasso
 
 class CharacterInfoActivity : AppCompatActivity() {
-    private var isBookmarked : Boolean = false
+    private var isBookmarked: Boolean = false
     private lateinit var dbHelper: DatabaseHelper
+    private lateinit var characterData: Character
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +26,7 @@ class CharacterInfoActivity : AppCompatActivity() {
         val characterOrigin = intent?.getStringExtra("originName") ?: "N/A"
         val characterImagePath = intent?.getStringExtra("image") ?: ""
 
-
+        characterData = Character(characterName, characterImagePath, characterStatus, characterGender, Origin(characterOrigin))
 
         val imageView: ImageView = findViewById(R.id.characterInfoImage)
         val nameTextView: TextView = findViewById(R.id.characterInfoName)
@@ -48,13 +49,18 @@ class CharacterInfoActivity : AppCompatActivity() {
             finish()
         }
 
+        // Check if the character is already bookmarked
+        isBookmarked = dbHelper.isCharacterBookmarked(characterName)
+        updateBookmarkButton()
+
         starButton.setOnClickListener {
             toggleBookmark()
         }
-
     }
 
     private fun toggleBookmark() {
+        isBookmarked = dbHelper.isCharacterBookmarked(characterData.name)
+
         if (isBookmarked) {
             removeBookmark()
         } else {
@@ -63,17 +69,10 @@ class CharacterInfoActivity : AppCompatActivity() {
     }
 
     private fun addBookmark() {
-        val name = intent.getStringExtra("name") ?: "N/A"
-        val image = intent.getStringExtra("image") ?: ""
-        val gender = intent.getStringExtra("gender") ?: "N/A"
-        val originName = intent.getStringExtra("originName") ?: "N/A"
-        val status = intent.getStringExtra("status") ?: "N/A"
-
-        val characterData = Character(name, image, status ,gender, Origin(originName))
-
         val newRowId = dbHelper.insertBookmark(characterData)
 
         if (newRowId != -1L) {
+            updateBookmarkButton()
             // Bookmark added successfully
             Toast.makeText(this, "Character added to bookmarks", Toast.LENGTH_SHORT).show()
         } else {
@@ -83,11 +82,10 @@ class CharacterInfoActivity : AppCompatActivity() {
     }
 
     private fun removeBookmark() {
-        val name = intent.getStringExtra("name") ?: "N/A"
-
-        val rowsDeleted = dbHelper.deleteBookmark(name)
+        val rowsDeleted = dbHelper.deleteBookmark(characterData.name)
 
         if (rowsDeleted > 0) {
+            updateBookmarkButton()
             // Bookmark removed successfully
             Toast.makeText(this, "Character removed from bookmarks", Toast.LENGTH_SHORT).show()
         } else {
@@ -95,4 +93,14 @@ class CharacterInfoActivity : AppCompatActivity() {
             Toast.makeText(this, "Failed to remove character from bookmarks", Toast.LENGTH_SHORT).show()
         }
     }
+
+    private fun updateBookmarkButton() {
+        val starButton: Button = findViewById(R.id.starButton)
+        if (isBookmarked) {
+            starButton.text = "Remove Bookmark"
+        } else {
+            starButton.text = "Add Bookmark"
+        }
+    }
 }
+

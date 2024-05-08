@@ -59,14 +59,10 @@ class BookmarksAdapter(private var mBookmarks: MutableList<Character> = mutableL
         holder.characterName.text = character.name
     }
 
-    fun addBookmarks(newBookmarks: List<Character>) {
-        mBookmarks.addAll(newBookmarks)
-        notifyDataSetChanged()
-    }
-
     fun updateBookmarks(bookmarks: List<Character>) {
         mBookmarks.clear()
         mBookmarks.addAll(bookmarks)
         notifyDataSetChanged()
     }
 }
+

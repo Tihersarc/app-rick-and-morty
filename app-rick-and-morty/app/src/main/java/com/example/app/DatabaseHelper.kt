@@ -52,19 +52,36 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             CharacterEntry.COLUMN_NAME_ID,
             CharacterEntry.COLUMN_NAME_NAME,
             CharacterEntry.COLUMN_NAME_IMAGE,
-            CharacterEntry.COLUMN_NAME_GENDER, // Include gender column
+            CharacterEntry.COLUMN_NAME_GENDER,
             CharacterEntry.COLUMN_NAME_ORIGIN,
             CharacterEntry.COLUMN_NAME_STATUS
         )
         return db.query(CharacterEntry.TABLE_NAME, projection, null, null, null, null, null)
     }
 
+    fun isCharacterBookmarked(name: String): Boolean {
+        val db = readableDatabase
+        val selection = "${CharacterEntry.COLUMN_NAME_NAME} = ?"
+        val selectionArgs = arrayOf(name)
+        val cursor = db.query(
+            CharacterEntry.TABLE_NAME,
+            null,
+            selection,
+            selectionArgs,
+            null,
+            null,
+            null
+        )
+        val isBookmarked = cursor.count > 0
+        cursor.close()
+        return isBookmarked
+    }
 
     companion object {
         const val DATABASE_VERSION = 1
         const val DATABASE_NAME = "CharacterBookmarks.db"
         private const val SQL_CREATE_ENTRIES =
-            "CREATE TABLE ${CharacterEntry.TABLE_NAME} (" +
+            "CREATE TABLE IF NOT EXISTS ${CharacterEntry.TABLE_NAME} (" +
                     "${CharacterEntry.COLUMN_NAME_ID} INTEGER PRIMARY KEY," +
                     "${CharacterEntry.COLUMN_NAME_NAME} TEXT," +
                     "${CharacterEntry.COLUMN_NAME_IMAGE} TEXT," +

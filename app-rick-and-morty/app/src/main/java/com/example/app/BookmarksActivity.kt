@@ -2,6 +2,7 @@ package com.example.app
 
 import BookmarksAdapter
 import DatabaseHelper
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,6 +27,19 @@ class BookmarksActivity : AppCompatActivity() {
         recyclerView.adapter = bookmarkAdapter
 
         loadBookmarks()
+
+        bookmarkAdapter.setOnItemClickListener(object : OnItemClickListener {
+            override fun onItemClick(character: Character) {
+                val intent = Intent(this@BookmarksActivity, CharacterInfoActivity::class.java).apply {
+                    putExtra("name", character.name)
+                    putExtra("image", character.image)
+                    putExtra("status", character.status)
+                    putExtra("gender", character.gender)
+                    putExtra("originName", character.origin.name)
+                }
+                startActivity(intent)
+            }
+        })
     }
 
     private fun loadBookmarks() {
@@ -38,10 +52,10 @@ class BookmarksActivity : AppCompatActivity() {
             val originName = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.CharacterEntry.COLUMN_NAME_ORIGIN))
             val status = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.CharacterEntry.COLUMN_NAME_STATUS))
 
-            val origin = Origin(originName)
-
-            bookmarks.add(Character(image, name, status, gender, origin))
+            val character = Character(name, image, status, gender, Origin(originName))
+            bookmarks.add(character)
         }
         bookmarkAdapter.updateBookmarks(bookmarks)
     }
 }
+
