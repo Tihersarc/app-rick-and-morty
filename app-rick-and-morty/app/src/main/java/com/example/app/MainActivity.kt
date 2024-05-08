@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
 
         val bookmarksButton: Button = findViewById(R.id.bookmarksButton)
         bookmarksButton.setOnClickListener {
-            openCharacterActivity()
+            openBookmarksActivity()
         }
 
         Picasso.setSingletonInstance(
