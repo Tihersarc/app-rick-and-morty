@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
     private fun openBookmarksActivity() { //Activity with a recyclerview filled with characters saved on the local db
-        val intent = Intent(this, CharacterActivity::class.java)
+        val intent = Intent(this, BookmarksActivity::class.java)
         startActivity(intent)
     }
 }

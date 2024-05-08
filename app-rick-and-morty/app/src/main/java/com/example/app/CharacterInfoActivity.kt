@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import com.squareup.picasso.Picasso
 
 class CharacterInfoActivity : AppCompatActivity() {
@@ -60,16 +61,36 @@ class CharacterInfoActivity : AppCompatActivity() {
     }
 
     private fun addBookmark() {
-        val name = intent.getStringExtra("name") ?: return
-        val image = intent.getStringExtra("image") ?: return
+        val name = intent.getStringExtra("name") ?: "N/A"
+        val image = intent.getStringExtra("image") ?: ""
+        val gender = intent.getStringExtra("gender") ?: "N/A"
+        val originName = intent.getStringExtra("originName") ?: "N/A"
+        val status = intent.getStringExtra("status") ?: "N/A"
 
-        val id = dbHelper.insertBookmark(name, image)
-        isBookmarked = id != -1L
+        val characterData = Character(name, image, status ,gender, Origin(originName))
+
+        val newRowId = dbHelper.insertBookmark(characterData)
+
+        if (newRowId != -1L) {
+            // Bookmark added successfully
+            Toast.makeText(this, "Character added to bookmarks", Toast.LENGTH_SHORT).show()
+        } else {
+            // Error adding bookmark
+            Toast.makeText(this, "Failed to add character to bookmarks", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun removeBookmark() {
-        val name = intent.getStringExtra("name") ?: return
-        val deletedRows = dbHelper.deleteBookmark(name)
-        isBookmarked = deletedRows > 0
+        val name = intent.getStringExtra("name") ?: "N/A"
+
+        val rowsDeleted = dbHelper.deleteBookmark(name)
+
+        if (rowsDeleted > 0) {
+            // Bookmark removed successfully
+            Toast.makeText(this, "Character removed from bookmarks", Toast.LENGTH_SHORT).show()
+        } else {
+            // Error removing bookmark
+            Toast.makeText(this, "Failed to remove character from bookmarks", Toast.LENGTH_SHORT).show()
+        }
     }
 }

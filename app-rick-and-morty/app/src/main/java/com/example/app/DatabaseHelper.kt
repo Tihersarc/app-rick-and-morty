@@ -26,14 +26,18 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         onCreate(db)
     }
 
-    fun insertBookmark(name: String, image: String): Long {
+    fun insertBookmark(characterData: com.example.app.Character): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
-            put(CharacterEntry.COLUMN_NAME_NAME, name)
-            put(CharacterEntry.COLUMN_NAME_IMAGE, image)
+            put(CharacterEntry.COLUMN_NAME_NAME, characterData.name)
+            put(CharacterEntry.COLUMN_NAME_IMAGE, characterData.image)
+            put(CharacterEntry.COLUMN_NAME_GENDER, characterData.gender)
+            put(CharacterEntry.COLUMN_NAME_ORIGIN, characterData.origin.name)
+            put(CharacterEntry.COLUMN_NAME_STATUS, characterData.status)
         }
         return db.insert(CharacterEntry.TABLE_NAME, null, values)
     }
+
 
     fun deleteBookmark(name: String): Int {
         val db = writableDatabase
