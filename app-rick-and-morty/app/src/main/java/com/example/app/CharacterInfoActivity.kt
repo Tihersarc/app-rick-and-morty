@@ -17,6 +17,8 @@ class CharacterInfoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_character_info)
 
+        dbHelper = DatabaseHelper(this)
+
         val characterName = intent?.getStringExtra("name") ?: "N/A"
         val characterStatus = intent?.getStringExtra("status") ?: "N/A"
         val characterGender = intent?.getStringExtra("gender") ?: "N/A"
