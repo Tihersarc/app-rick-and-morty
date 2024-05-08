@@ -11,7 +11,7 @@ import com.squareup.picasso.Picasso
 import com.example.app.Character
 
 
-class BookmarkAdapter(private var mBookmarks: MutableList<Character> = mutableListOf()) : RecyclerView.Adapter<BookmarkAdapter.ViewHolder>() {
+class BookmarksAdapter(private var mBookmarks: MutableList<Character> = mutableListOf()) : RecyclerView.Adapter<BookmarksAdapter.ViewHolder>() {
 
     private var onItemClickListener: OnItemClickListener? = null
 
