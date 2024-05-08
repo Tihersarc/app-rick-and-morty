@@ -3,7 +3,6 @@ package com.example.app
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.squareup.picasso.Picasso
@@ -14,8 +13,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val button: Button = findViewById(R.id.characterListButton)
-        button.setOnClickListener {
+        val characterListButton: Button = findViewById(R.id.characterListButton)
+        characterListButton.setOnClickListener {
+            openCharacterActivity()
+        }
+
+        val bookmarksButton: Button = findViewById(R.id.bookmarksButton)
+        bookmarksButton.setOnClickListener {
             openCharacterActivity()
         }
 
@@ -25,7 +29,11 @@ class MainActivity : AppCompatActivity() {
                 .build())
     }
 
-    private fun openCharacterActivity() {
+    private fun openCharacterActivity() { //Activity with a recyclerview filled with characters from the api request
+        val intent = Intent(this, CharacterActivity::class.java)
+        startActivity(intent)
+    }
+    private fun openBookmarksActivity() { //Activity with a recyclerview filled with characters saved on the local db
         val intent = Intent(this, CharacterActivity::class.java)
         startActivity(intent)
     }
