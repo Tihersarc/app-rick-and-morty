@@ -1,6 +1,7 @@
 package com.example.app
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapShader
 import android.graphics.Canvas
@@ -93,12 +94,22 @@ class RecyclerAdapter(private var mCharacters: MutableList<Character> = mutableL
                         .start()
                 }
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+
                     image.animate().cancel()
                     image.animate()
                         .scaleX(1f)
                         .scaleY(1f)
                         .setDuration(300)
                         .start()
+                    val character = mCharacters[position]
+                    val intent = Intent(image.context, CharacterInfoActivity::class.java).apply {
+                        putExtra("name", character.name)
+                        putExtra("image", character.image)
+                        putExtra("status", character.status)
+                        putExtra("gender", character.gender)
+                        putExtra("originName", character.origin.name)
+                    }
+                    image.context.startActivity(intent)
                 }
             }
             true
