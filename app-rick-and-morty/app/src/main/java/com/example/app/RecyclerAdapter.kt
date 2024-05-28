@@ -9,6 +9,7 @@ import android.graphics.RectF
 import android.graphics.Shader
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -56,6 +57,7 @@ class RecyclerAdapter(private var mCharacters: MutableList<Character> = mutableL
         return mCharacters.size
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val character: Character = mCharacters[position]
 
@@ -78,6 +80,29 @@ class RecyclerAdapter(private var mCharacters: MutableList<Character> = mutableL
             })
 
         holder.characterName.text = character.name
+
+        // Add hover effect to characterImage
+        holder.characterImage.setOnTouchListener { image, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    image.animate().cancel()
+                    image.animate()
+                        .scaleX(1.2f)
+                        .scaleY(1.2f)
+                        .setDuration(300)
+                        .start()
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    image.animate().cancel()
+                    image.animate()
+                        .scaleX(1f)
+                        .scaleY(1f)
+                        .setDuration(300)
+                        .start()
+                }
+            }
+            true
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
